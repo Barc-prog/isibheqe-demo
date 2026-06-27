@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IsiBheqe — Different Modes (module)</title>
+
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+     ║  TEST SCAFFOLDING ONLY — not part of the module.                   ║
+     ║  Lift the blocks between MODULE START / MODULE END into your page. ║
+     ╚══════════════════════════════════════════════════════════════════╝ -->
+<style>body{margin:0;background:#fcfaf4;padding:24px 8px;font-family:sans-serif;}</style>
+</head>
+<body>
+
+<!-- ════════════════════════════ MODULE START ════════════════════════════
+     Namespaced under .ibq-demo + private IIFE. Same conventions as Places:
+       • edit CFG (top of <script>) to point at your asset folders
+       • content lives in the SERIES array — edit there, not in markup
+       • accent set by the .ibq-modes class (red)
+     ======================================================================= -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spline+Sans:wght@400;500;600&display=swap');
+
+  .ibq-demo{
+    --ibq-accent:#b3402e; --ibq-accent-soft:#e6b6aa; --ibq-accent-wash:#fbeee9;
+    --ibq-ink:#2a2118; --ibq-ink-soft:#6c6151;
+    --ibq-paper:#fcfaf4; --ibq-paper2:#f6f1e6; --ibq-line:#e4dcc9;
+    --ibq-triangle:#d8cdb2; --ibq-mark:#7d2a1e;
+    --ibq-block:60px; --ibq-radius:14px;
+    max-width:880px;margin:0 auto;padding:26px 18px 40px;
+    background:var(--ibq-paper);color:var(--ibq-ink);
+    font-family:'Spline Sans',system-ui,sans-serif;line-height:1.5;
+    border:1px solid var(--ibq-line);border-radius:18px;
+    background-image:radial-gradient(var(--ibq-paper2) 1px,transparent 1px);background-size:22px 22px;
+  }
+  .ibq-modes{--ibq-accent:#b3402e;--ibq-accent-soft:#e6b6aa;--ibq-accent-wash:#fbeee9;--ibq-mark:#7d2a1e;}
+  .ibq-demo *{box-sizing:border-box;}
+
+  .ibq-demo .eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ibq-accent);font-weight:600;margin:0 0 6px;}
+  .ibq-demo h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,7vw,3rem);line-height:1.03;margin:0 0 14px;letter-spacing:-.01em;}
+  .ibq-demo h1 .num{color:var(--ibq-accent);font-style:italic;font-weight:400;}
+  .ibq-demo .held{display:flex;flex-wrap:wrap;gap:8px;margin:0;}
+  .ibq-demo .chip{font-size:.8rem;background:var(--ibq-accent-wash);color:var(--ibq-ink-soft);border:1px solid var(--ibq-line);border-radius:999px;padding:5px 12px;}
+  .ibq-demo .chip b{color:var(--ibq-ink);font-weight:600;}
+  .ibq-demo .lead{color:var(--ibq-ink-soft);max-width:56ch;margin:14px 0 0;font-size:1rem;}
+  .ibq-demo .rule{height:1px;background:var(--ibq-line);margin:26px 0;}
+
+  /* per-series block */
+  .ibq-demo .series{margin:0 0 30px;}
+  .ibq-demo .series-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 12px;flex-wrap:wrap;}
+  .ibq-demo .series-label{font-family:'Fraunces',serif;font-size:1.2rem;margin:0;color:var(--ibq-ink);}
+  .ibq-demo .series-label .base{font-family:'Spline Sans',sans-serif;font-size:.76rem;color:var(--ibq-ink-soft);margin-left:8px;font-style:normal;}
+  .ibq-demo .playall{border:1px solid var(--ibq-accent);color:var(--ibq-accent);background:transparent;border-radius:999px;padding:7px 13px;font:inherit;font-size:.78rem;font-weight:600;display:inline-flex;align-items:center;gap:7px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s;}
+  .ibq-demo .playall:hover{background:var(--ibq-accent);color:#fff;}
+  .ibq-demo .playall svg{width:12px;height:12px;}
+
+  .ibq-demo .hero{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:6px;background:var(--ibq-paper2);border:1px solid var(--ibq-line);border-radius:var(--ibq-radius);padding:16px 10px;}
+  .ibq-demo .cue{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;font:inherit;cursor:pointer;padding:6px 2px;border-radius:10px;transition:background .15s;position:relative;}
+  .ibq-demo .cue:hover{background:rgba(179,64,46,.07);}
+  .ibq-demo .cue.active{background:var(--ibq-accent-wash);}
+  .ibq-demo .cue.dim{opacity:.4;}
+  .ibq-demo .glyph-frame{position:relative;width:100%;aspect-ratio:1/1;max-width:var(--ibq-block);display:flex;align-items:center;justify-content:center;}
+  .ibq-demo .glyph-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+  .ibq-demo .glyph-img.missing{display:none;}
+  .ibq-demo .glyph-ph{width:100%;height:100%;}
+  .ibq-demo .cue-label{font-size:.92rem;font-weight:500;}
+  .ibq-demo .cue .mode{font-size:.62rem;line-height:1.15;text-align:center;color:var(--ibq-ink-soft);}
+  .ibq-demo .cue .mode b{display:block;color:var(--ibq-accent);font-weight:600;}
+  .ibq-demo .cue .mode i{font-style:italic;}
+
+  .ibq-demo .play{position:relative;width:32px;height:32px;border-radius:50%;border:1px solid var(--ibq-line);background:var(--ibq-paper);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ibq-accent);transition:border-color .15s,transform .1s;}
+  .ibq-demo .play:hover{border-color:var(--ibq-accent);}
+  .ibq-demo .play:active{transform:scale(.92);}
+  .ibq-demo .play svg{width:11px;height:11px;}
+  .ibq-demo .play.muted{color:#c8c2b3;cursor:default;}
+  .ibq-demo .play::after{content:"";position:absolute;width:44px;height:44px;}
+
+  .ibq-demo .nuance{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;border:1px solid var(--ibq-accent);color:var(--ibq-accent);font-size:.6rem;font-weight:700;cursor:help;margin-left:4px;line-height:1;vertical-align:super;}
+
+  .ibq-demo .zoom{grid-column:1/-1;overflow:hidden;max-height:0;opacity:0;transition:max-height .3s ease,opacity .25s ease;}
+  .ibq-demo .zoom.open{max-height:360px;opacity:1;margin-top:8px;}
+  .ibq-demo .zoom-inner{background:var(--ibq-paper);border:1px solid var(--ibq-accent-soft);border-radius:12px;padding:18px;display:flex;gap:18px;align-items:center;}
+  .ibq-demo .zoom .big{width:112px;height:112px;flex:0 0 auto;position:relative;}
+  .ibq-demo .zoom .meta h3{font-family:'Fraunces',serif;font-size:1.45rem;margin:0 0 2px;}
+  .ibq-demo .zoom .meta .ipa{font-size:.85rem;color:var(--ibq-ink-soft);margin-bottom:10px;}
+  .ibq-demo .zoom .meta .applies{font-size:.85rem;color:var(--ibq-ink-soft);}
+  .ibq-demo .zoom .meta .applies b{color:var(--ibq-ink);}
+  .ibq-demo .zoom .play{margin-top:10px;}
+
+  .ibq-demo .apps{display:grid;grid-template-columns:1fr;gap:10px;}
+  .ibq-demo .word{background:var(--ibq-paper2);border:1px solid var(--ibq-line);border-radius:12px;padding:14px;}
+  .ibq-demo .word .place-tag{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ibq-accent);font-weight:600;margin-bottom:8px;}
+  .ibq-demo .word .place-tag i{font-style:italic;text-transform:none;letter-spacing:0;color:var(--ibq-ink-soft);font-weight:400;}
+  .ibq-demo .word .romanized{font-family:'Fraunces',serif;font-size:1.4rem;line-height:1;margin-bottom:9px;}
+  .ibq-demo .word .wglyph{position:relative;height:50px;margin:0 0 9px;display:flex;}
+  .ibq-demo .word .wglyph .glyph-frame{max-width:none;width:auto;aspect-ratio:auto;height:100%;}
+  .ibq-demo .word .wglyph .glyph-ph,.ibq-demo .word .wglyph .glyph-img{position:static;height:100%;width:auto;}
+  .ibq-demo .word .gloss{font-size:.88rem;color:var(--ibq-ink-soft);}
+  .ibq-demo .word .gloss .src{color:var(--ibq-ink);font-weight:500;}
+  .ibq-demo .word .wplay{margin-top:10px;}
+
+  .ibq-demo .notes{margin-top:22px;font-size:.82rem;color:var(--ibq-ink-soft);}
+  .ibq-demo .notes h4{font-family:'Fraunces',serif;font-style:italic;font-weight:400;color:var(--ibq-ink);margin:0 0 6px;font-size:1rem;}
+
+  @media(min-width:720px){
+    .ibq-demo{--ibq-block:80px;}
+    .ibq-demo .hero{gap:10px;padding:20px 16px;}
+    .ibq-demo .apps{grid-template-columns:repeat(var(--n,4),1fr);align-items:start;}
+    .ibq-demo .word{background:none;border:0;border-radius:0;padding:8px 6px;border-top:2px solid var(--ibq-accent-soft);}
+    .ibq-demo .word .romanized{font-size:1.2rem;}
+  }
+</style>
+
+<section class="ibq-demo ibq-modes">
+  <header>
+    <p class="eyebrow">IsiBheqe soHlamvu · Demos 4–7 of 7</p>
+    <h1>Different <span class="num">Modes</span> of a manner</h1>
+    <div class="held">
+      <span class="chip">vowel held: <b>/a/ &#9661;</b></span>
+      <span class="chip">base held: <b>per series</b></span>
+      <span class="chip">varying: <b>voicing &amp; airstream</b></span>
+    </div>
+    <p class="lead">Keep the base consonant and the vowel fixed. Now the only thing that changes is the modifier added to the syllableblock — a voicing line (<i>uphimbo</i>), an ejective or implosive mark (<i>lerothodi</i>). Each strip below takes one base sound and walks it through its modes.</p>
+  </header>
+
+  <div class="rule"></div>
+
+  <div id="ibq-modes-mount"></div>
+
+  <div class="notes">
+    <h4>Notes</h4>
+    <p>Most words are given as the verb <b>stem</b> or root rather than the full inflected form.</p>
+    <p>IsiBheqe modifier names (<i>uphimbo</i>, <i>lerothodi</i>) and the click-series labelling are pending confirmation with the script's creator.</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  /* ╔══════════════════════════════════════════════════════════════╗
+     ║  CONFIG — point these at your asset folders. Edit only these. ║
+     ╚══════════════════════════════════════════════════════════════╝ */
+  const CFG = {
+    glyphCue:'assets/glyphs/cues/', glyphWord:'assets/glyphs/words/',
+    audioCue:'assets/audio/cues/',  audioWord:'assets/audio/words/',
+    glyphExt:'.svg', audioExt:'.mp3'
+  };
+  /* cues expected WITH the "_a" suffix (e.g. Voiced_bilabial_plosive_a.svg).
+     If yours omit it, say so and the suffix is dropped. */
+
+  /* ── CONTENT — edit words/glosses here ─────────────────────────── */
+  const SERIES = [
+    { label:'/p/ series', base:'bilabial', cells:[
+      {mode:'Aspirated',term:'',         cue:'Aspirated_bilabial_plosive_a', rom:'pha', ipa:'/p\u02b0a/', mod:'aspirated', word:'phapha',  wrom:'phapha', gloss:'to be overenthusiastic', src:'isiZulu, Sesotho'},
+      {mode:'Voiced',   term:'uphimbo',  cue:'Voiced_bilabial_plosive_a',    rom:'bha', ipa:'/ba/',       mod:'voiced',    word:'bhabha',  wrom:'bhabha', gloss:'to entrap',             src:'isiZulu'},
+      {mode:'Ejective', term:'lerothodi',cue:'Bilabial_ejective_stop_a',     rom:'pa',  ipa:'/p\u02bca/', mod:'ejective',  word:'papadi',  wrom:'papadi', gloss:'a game',                src:'Sesotho'},
+      {mode:'Implosive',term:'lerothodi',cue:'Voiced_bilabial_implosive_a',  rom:'ba',  ipa:'/\u0253a/',  mod:'implosive', word:'baba',    wrom:'baba',   gloss:'to be bitter / spicy',  src:'isiZulu'}
+    ]},
+    { label:'/t/ series', base:'alveolar', cells:[
+      {mode:'Aspirated',term:'',         cue:'Aspirated_alveolar_plosive_a', rom:'tha', ipa:'/t\u02b0a/', mod:'aspirated', word:'thatha',  wrom:'thatha', gloss:'to take',   src:'isiZulu'},
+      {mode:'Voiced',   term:'uphimbo',  cue:'Voiced_alveolar_plosive_a',    rom:'da',  ipa:'/da/',       mod:'voiced',    word:'idada',   wrom:'idada',  gloss:'a duck',    src:'isiZulu'},
+      {mode:'Ejective', term:'lerothodi',cue:'Alveolar_ejective_stop_a',     rom:'ta',  ipa:'/t\u02bca/', mod:'ejective',  word:'tata_xh', wrom:'tata',   gloss:'father',    src:'isiXhosa'}
+    ]},
+    { label:'/k/ series', base:'velar', cells:[
+      {mode:'Aspirated',term:'',         cue:'Aspirated_velar_plosive_a',    rom:'kha', ipa:'/k\u02b0a/', mod:'aspirated', word:'khokho',  wrom:'khokho', gloss:'ancestor',     src:'isiZulu'},
+      {mode:'Voiced',   term:'uphimbo',  cue:'Voiced_velar_plosive_a',       rom:'ga',  ipa:'/ga/',       mod:'voiced',    word:'gogo',    wrom:'gogo',   gloss:'grandmother',  src:'isiZulu'},
+      {mode:'Ejective', term:'lerothodi',cue:'Velar_ejective_stop_a',        rom:'ka',  ipa:'/k\u02bca/', mod:'ejective',  word:'kuku',    wrom:'kuku',   gloss:'cake',         src:'Sesotho'}
+    ]},
+    { label:'/\u01c3/ series', base:'alveolar click', cells:[
+      {mode:'Aspirated',term:'',         cue:'Aspirated_alveolar_click_a',   rom:'qha', ipa:'/\u01c3\u02b0a/', mod:'aspirated', word:'qhoqhoqho', wrom:'qhoqhoqho', gloss:'oesophagus',                         src:'isiZulu'},
+      {mode:'Voiced',   term:'uphimbo',  cue:'Voiced_alveolar_click_a',      rom:'gqa', ipa:'/\u0262\u01c3a/', mod:'voiced',    word:'gqogqosha', wrom:'gqogqosha', gloss:'to carry someone on one\u2019s neck', src:'isiZulu'},
+      {mode:'Ejective', term:'lerothodi',cue:'Alveolar_click_a',             rom:'qa',  ipa:'/\u01c3a/',       mod:'ejective',  word:'qoqo',      wrom:'qoqo',      gloss:'a collection',                       src:'isiZulu', nuance:'For clicks this column is tenuis (plain), not a true ejective — shown to mirror the stop series.'}
+    ]}
+  ];
+
+  const PLAY='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l12 7-12 7V5z"/></svg>';
+  const PLAYALL='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6l7 5-7 5V6zm9 0l7 5-7 5V6z"/></svg>';
+
+  /* indicative placeholder: /a/ triangle + base line + a modifier hint */
+  function ph(label,mod){
+    const ax=50,topY=18,botY=86,halfW=34;
+    const tri=`<polygon points="${ax-halfW},${topY} ${ax+halfW},${topY} ${ax},${botY}" fill="var(--ibq-triangle)" stroke="var(--ibq-line)" stroke-width="1.5"/>`;
+    const mid=`<line x1="${ax-17}" y1="54" x2="${ax+17}" y2="54" stroke="var(--ibq-mark)" stroke-width="3.4" stroke-linecap="round"/>`;
+    let ex='';
+    if(mod==='voiced')    ex=`<line x1="${ax-13}" y1="65" x2="${ax+13}" y2="65" stroke="var(--ibq-mark)" stroke-width="3" stroke-linecap="round"/>`;
+    else if(mod==='ejective')  ex=`<circle cx="${ax}" cy="30" r="3.6" fill="var(--ibq-mark)"/>`;
+    else if(mod==='implosive') ex=`<circle cx="${ax}" cy="69" r="3.6" fill="var(--ibq-mark)"/>`;
+    return `<svg class="glyph-ph" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${tri}${mid}${ex}<text x="${ax}" y="${botY-6}" text-anchor="middle" font-family="Spline Sans,sans-serif" font-size="10.5" fill="#fff" font-weight="600" opacity=".85">${label}</text></svg>`;
+  }
+  const img=(src,alt)=>`<img class="glyph-img" src="${src}" alt="${alt}" onerror="this.classList.add('missing')">`;
+
+  const pool=document.createElement('div');pool.hidden=true;document.body.appendChild(pool);
+  function play(src,btn){
+    let a=pool.querySelector(`audio[data-s="${src}"]`);
+    if(!a){a=document.createElement('audio');a.dataset.s=src;a.src=src;pool.appendChild(a);
+      a.addEventListener('error',()=>{if(btn){btn.classList.add('muted');btn.title='audio not added yet';}});}
+    a.currentTime=0;a.play().catch(()=>{if(btn){btn.classList.add('muted');btn.title='audio not added yet';}});
+  }
+
+  /* ── render each series strip ─────────────────────────────────── */
+  const mount=document.getElementById('ibq-modes-mount');
+  SERIES.forEach(s=>{
+    const n=s.cells.length;
+    const series=document.createElement('div'); series.className='series';
+    series.innerHTML=`
+      <div class="series-head">
+        <p class="series-label">${s.label}<span class="base">base: ${s.base}</span></p>
+        <button class="playall">${PLAYALL} Play sequence</button>
+      </div>
+      <div class="hero" style="--n:${n}"></div>
+      <div class="apps" style="--n:${n}"></div>`;
+    const hero=series.querySelector('.hero'), apps=series.querySelector('.apps');
+
+    s.cells.forEach(c=>{
+      const modeTag=`<span class="mode"><b>${c.mode}</b>${c.term?`<i>${c.term}</i>`:''}${c.nuance?`<span class="nuance" title="${c.nuance}">?</span>`:''}</span>`;
+      const cue=document.createElement('button'); cue.className='cue';
+      cue.innerHTML=`<span class="glyph-frame">${ph(c.rom,c.mod)}${img(CFG.glyphCue+c.cue+CFG.glyphExt,c.rom)}</span>
+        <span class="cue-label">${c.rom}</span>${modeTag}
+        <span class="play" data-src="${CFG.audioCue+c.cue+CFG.audioExt}" aria-label="play ${c.rom}"></span>`;
+      cue._cell=c; hero.appendChild(cue);
+
+      const w=document.createElement('div'); w.className='word';
+      w.innerHTML=`<div class="place-tag">${c.mode}${c.term?` &middot; <i>${c.term}</i>`:''}</div>
+        <div class="romanized">${c.wrom}</div>
+        <div class="wglyph"><span class="glyph-frame">${ph(c.wrom,'aspirated')}${img(CFG.glyphWord+c.word+CFG.glyphExt,c.word)}</span></div>
+        <div class="gloss">${c.gloss} &middot; <span class="src">${c.src}</span></div>
+        <span class="play wplay" data-src="${CFG.audioWord+c.word+CFG.audioExt}" aria-label="play ${c.wrom}"></span>`;
+      apps.appendChild(w);
+    });
+
+    const zoom=document.createElement('div'); zoom.className='zoom';
+    zoom.innerHTML='<div class="zoom-inner"></div>';
+    hero.appendChild(zoom);
+    const zi=zoom.querySelector('.zoom-inner');
+
+    // play buttons
+    series.querySelectorAll('.play').forEach(p=>{p.innerHTML=PLAY;
+      p.addEventListener('click',e=>{e.stopPropagation();play(p.dataset.src,p);});});
+
+    // play-all (walks this series' cues)
+    const cues=[...hero.querySelectorAll('.cue')];
+    series.querySelector('.playall').addEventListener('click',()=>{
+      let i=0;(function nx(){
+        if(i>=cues.length){cues.forEach(c=>c.classList.remove('dim','active'));return;}
+        cues.forEach(c=>c.classList.add('dim'));cues[i].classList.remove('dim');cues[i].classList.add('active');
+        play(cues[i]._cell.cueSrc||CFG.audioCue+cues[i]._cell.cue+CFG.audioExt);
+        const cur=cues[i];i++;setTimeout(()=>{cur.classList.remove('active');nx();},900);
+      })();
+    });
+
+    // inline zoom
+    let openKey=null;
+    cues.forEach(cue=>{
+      cue.addEventListener('click',()=>{
+        const c=cue._cell;
+        if(openKey===c.cue){zoom.classList.remove('open');openKey=null;cues.forEach(x=>x.classList.remove('active','dim'));return;}
+        openKey=c.cue;
+        zi.innerHTML=`<span class="glyph-frame big">${ph(c.rom,c.mod)}${img(CFG.glyphCue+c.cue+CFG.glyphExt,c.rom)}</span>
+          <div class="meta"><h3>${c.rom}</h3>
+          <div class="ipa">${c.ipa} &middot; ${c.mode}${c.term?` (<i>${c.term}</i>)`:''}</div>
+          <div class="applies">in a word: <b>${c.wrom}</b> — ${c.gloss} &middot; ${c.src}</div>
+          <span class="play" data-src="${CFG.audioCue+c.cue+CFG.audioExt}" aria-label="play ${c.rom}">${PLAY}</span></div>`;
+        zi.querySelector('.play').addEventListener('click',e=>{e.stopPropagation();play(CFG.audioCue+c.cue+CFG.audioExt,e.currentTarget);});
+        cue.after(zoom);zoom.classList.add('open');
+        cues.forEach(x=>x.classList.add('dim'));cue.classList.remove('dim');cue.classList.add('active');
+      });
+    });
+
+    mount.appendChild(series);
+  });
+})();
+</script>
+<!-- ════════════════════════════ MODULE END ════════════════════════════ -->
+
+</body>
+</html>

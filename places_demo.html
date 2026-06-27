@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IsiBheqe — Different Places (module)</title>
+
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+     ║  TEST SCAFFOLDING ONLY — not part of the module.                   ║
+     ║  This <head> + the neutral body bg just let you preview the file.  ║
+     ║  The transplantable part is between MODULE START / MODULE END.     ║
+     ╚══════════════════════════════════════════════════════════════════╝ -->
+<style>
+  body{margin:0;background:#fcfaf4;padding:24px 8px;font-family:sans-serif;}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════ MODULE START ════════════════════════════
+     Lift these three blocks (style + section + script) into any page.
+     They are namespaced under .ibq-demo and a private IIFE, so they will
+     not collide with your existing site's CSS or scripts.
+
+     >>> TO POINT AT YOUR ASSETS: edit the CFG block at the top of <script>.
+     >>> Each section can have its own accent via its class (.ibq-places etc).
+     ======================================================================= -->
+
+<style>
+  /* fonts: scoped in effect via .ibq-demo font-family. Remove this @import and
+     the font-family lines below if you'd rather inherit the site's fonts. */
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spline+Sans:wght@400;500;600&display=swap');
+
+  .ibq-demo{
+    --ibq-accent:#c8841a; --ibq-accent-soft:#f0d9a8; --ibq-accent-wash:#fbf3e2;
+    --ibq-ink:#2a2118; --ibq-ink-soft:#6c6151;
+    --ibq-paper:#fcfaf4; --ibq-paper2:#f6f1e6; --ibq-line:#e4dcc9;
+    --ibq-triangle:#d8cdb2; --ibq-mark:#8a6a2a;
+    --ibq-block:60px; --ibq-radius:14px;
+
+    max-width:880px; margin:0 auto; padding:26px 18px 40px;
+    background:var(--ibq-paper); color:var(--ibq-ink);
+    font-family:'Spline Sans',system-ui,sans-serif; line-height:1.5;
+    border:1px solid var(--ibq-line); border-radius:18px;
+    background-image:radial-gradient(var(--ibq-paper2) 1px,transparent 1px);
+    background-size:22px 22px;
+  }
+  .ibq-places{--ibq-accent:#c8841a;--ibq-accent-soft:#f0d9a8;--ibq-accent-wash:#fbf3e2;}
+
+  .ibq-demo *{box-sizing:border-box;}
+
+  .ibq-demo .eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ibq-accent);font-weight:600;margin:0 0 6px;}
+  .ibq-demo h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,7vw,3rem);line-height:1.03;margin:0 0 14px;letter-spacing:-.01em;}
+  .ibq-demo h1 .num{color:var(--ibq-accent);font-style:italic;font-weight:400;}
+  .ibq-demo .held{display:flex;flex-wrap:wrap;gap:8px;margin:0;}
+  .ibq-demo .chip{font-size:.8rem;background:var(--ibq-accent-wash);color:var(--ibq-ink-soft);border:1px solid var(--ibq-line);border-radius:999px;padding:5px 12px;}
+  .ibq-demo .chip b{color:var(--ibq-ink);font-weight:600;}
+  .ibq-demo .lead{color:var(--ibq-ink-soft);max-width:54ch;margin:14px 0 0;font-size:1rem;}
+  .ibq-demo .rule{height:1px;background:var(--ibq-line);margin:28px 0;}
+
+  .ibq-demo .tier-label{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--ibq-ink-soft);margin:0 0 4px;display:flex;align-items:center;gap:8px;}
+  .ibq-demo .tier-label .dot{width:7px;height:7px;border-radius:50%;background:var(--ibq-accent);}
+  .ibq-demo .tier-sub{font-size:.85rem;color:var(--ibq-ink-soft);margin:0 0 16px;}
+
+  .ibq-demo .herobar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+  .ibq-demo .herobar .seq{font-size:.8rem;color:var(--ibq-ink-soft);}
+  .ibq-demo .playall{border:1px solid var(--ibq-accent);color:var(--ibq-accent);background:transparent;border-radius:999px;padding:8px 14px;font:inherit;font-size:.82rem;font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s;}
+  .ibq-demo .playall:hover{background:var(--ibq-accent);color:#fff;}
+  .ibq-demo .playall svg{width:13px;height:13px;}
+
+  .ibq-demo .hero{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:var(--ibq-paper2);border:1px solid var(--ibq-line);border-radius:var(--ibq-radius);padding:16px 10px;}
+  .ibq-demo .cue{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;font:inherit;cursor:pointer;padding:6px 2px;border-radius:10px;transition:background .15s;position:relative;}
+  .ibq-demo .cue:hover{background:rgba(200,132,26,.07);}
+  .ibq-demo .cue.active{background:var(--ibq-accent-wash);}
+  .ibq-demo .cue.dim{opacity:.4;}
+  .ibq-demo .glyph-frame{position:relative;width:100%;aspect-ratio:1/1;max-width:var(--ibq-block);display:flex;align-items:center;justify-content:center;}
+  .ibq-demo .glyph-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+  .ibq-demo .glyph-img.missing{display:none;}
+  .ibq-demo .glyph-ph{width:100%;height:100%;}
+  .ibq-demo .cue-label{font-size:.95rem;font-weight:500;}
+  .ibq-demo .cue .ipa{font-size:.7rem;color:var(--ibq-ink-soft);margin-top:-4px;}
+
+  .ibq-demo .play{position:relative;width:34px;height:34px;border-radius:50%;border:1px solid var(--ibq-line);background:var(--ibq-paper);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ibq-accent);transition:border-color .15s,transform .1s;}
+  .ibq-demo .play:hover{border-color:var(--ibq-accent);}
+  .ibq-demo .play:active{transform:scale(.92);}
+  .ibq-demo .play svg{width:12px;height:12px;}
+  .ibq-demo .play.muted{color:#c8c2b3;cursor:default;}
+  .ibq-demo .play::after{content:"";position:absolute;width:44px;height:44px;} /* 44px touch target */
+
+  .ibq-demo .railnote{text-align:center;font-size:.78rem;color:var(--ibq-ink-soft);margin:12px 4px 0;font-style:italic;}
+  .ibq-demo .railnote b{color:var(--ibq-accent);font-style:normal;font-weight:600;}
+
+  .ibq-demo .zoom{grid-column:1/-1;overflow:hidden;max-height:0;opacity:0;transition:max-height .3s ease,opacity .25s ease;}
+  .ibq-demo .zoom.open{max-height:360px;opacity:1;margin-top:8px;}
+  .ibq-demo .zoom-inner{background:var(--ibq-paper);border:1px solid var(--ibq-accent-soft);border-radius:12px;padding:18px;display:flex;gap:18px;align-items:center;}
+  .ibq-demo .zoom .big{width:118px;height:118px;flex:0 0 auto;position:relative;}
+  .ibq-demo .zoom .meta h3{font-family:'Fraunces',serif;font-size:1.5rem;margin:0 0 2px;}
+  .ibq-demo .zoom .meta .ipa{font-size:.85rem;color:var(--ibq-ink-soft);margin-bottom:10px;}
+  .ibq-demo .zoom .meta .applies{font-size:.85rem;color:var(--ibq-ink-soft);}
+  .ibq-demo .zoom .meta .applies b{color:var(--ibq-ink);}
+  .ibq-demo .zoom .play{margin-top:10px;}
+
+  .ibq-demo .apps{display:grid;grid-template-columns:1fr;gap:12px;}
+  .ibq-demo .word{background:var(--ibq-paper2);border:1px solid var(--ibq-line);border-radius:12px;padding:16px;}
+  .ibq-demo .word .place-tag{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ibq-accent);font-weight:600;margin-bottom:10px;}
+  .ibq-demo .word .romanized{font-family:'Fraunces',serif;font-size:1.5rem;line-height:1;margin-bottom:10px;}
+  .ibq-demo .word .wglyph{position:relative;height:54px;margin:0 0 10px;display:flex;}
+  .ibq-demo .word .wglyph .glyph-frame{max-width:none;width:auto;aspect-ratio:auto;height:100%;}
+  .ibq-demo .word .wglyph .glyph-ph,.ibq-demo .word .wglyph .glyph-img{position:static;height:100%;width:auto;}
+  .ibq-demo .word .gloss{font-size:.92rem;color:var(--ibq-ink-soft);}
+  .ibq-demo .word .gloss .src{color:var(--ibq-ink);font-weight:500;}
+  .ibq-demo .word .wplay{margin-top:12px;}
+
+  /* nuance marker — defined for later sections (syllabic trill, click modes…); unused in Places */
+  .ibq-demo .nuance{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--ibq-accent);color:var(--ibq-accent);font-size:.62rem;font-weight:700;cursor:help;vertical-align:super;margin-left:5px;line-height:1;}
+
+  .ibq-demo .notes{margin-top:30px;font-size:.82rem;color:var(--ibq-ink-soft);}
+  .ibq-demo .notes h4{font-family:'Fraunces',serif;font-style:italic;font-weight:400;color:var(--ibq-ink);margin:0 0 6px;font-size:1rem;}
+
+  @media(min-width:720px){
+    .ibq-demo{--ibq-block:84px;}
+    .ibq-demo .hero{grid-template-columns:repeat(5,1fr);gap:10px;padding:22px 16px;}
+    .ibq-demo .apps{grid-template-columns:repeat(5,1fr);align-items:start;}
+    .ibq-demo .word{background:none;border:0;border-radius:0;padding:8px 6px;border-top:2px solid var(--ibq-accent-soft);}
+    .ibq-demo .word .place-tag{display:none;}
+    .ibq-demo .word .romanized{font-size:1.25rem;}
+  }
+</style>
+
+<section class="ibq-demo ibq-places">
+  <header>
+    <p class="eyebrow">IsiBheqe soHlamvu · Demo 1 of 7</p>
+    <h1>Different <span class="num">Places</span> of articulation</h1>
+    <div class="held">
+      <span class="chip">manner held: <b>plosive</b></span>
+      <span class="chip">vowel held: <b>/a/ &#9661;</b></span>
+      <span class="chip">varying: <b>place · lips &rarr; velum</b></span>
+    </div>
+    <p class="lead">Hold the vowel still (the downward triangle for /a/) and the manner still (a plosive — a straight line). Now only one thing moves: as the sound travels from the lips back to the soft palate, the line slides from the apex of the triangle toward its base.</p>
+  </header>
+
+  <div class="rule"></div>
+
+  <p class="tier-label"><span class="dot"></span> The phoneme sequence</p>
+  <p class="tier-sub">Tap a syllableblock to enlarge it. Watch the plosive line migrate.</p>
+
+  <div class="herobar">
+    <span class="seq">pha · &#7787;a · tha · tya · kha</span>
+    <button class="playall" aria-label="Play the whole sequence in order">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6l7 5-7 5V6zm9 0l7 5-7 5V6z"/></svg>
+      Play sequence
+    </button>
+  </div>
+
+  <div class="hero">
+    <button class="cue" data-cue="Aspirated_bilabial_plosive_a" data-label="pha" data-ipa="/p&#688;a/" data-place="Bilabial" data-pos="0.72"><span class="glyph-frame"></span><span class="cue-label">pha</span><span class="ipa">/p&#688;a/</span><span class="play" data-kind="cue" aria-label="play pha"></span></button>
+    <button class="cue" data-cue="Aspirated_dental_plosive_a" data-label="&#7787;a" data-ipa="/t&#810;&#688;a/" data-place="Dental" data-pos="dbl"><span class="glyph-frame"></span><span class="cue-label">&#7787;a</span><span class="ipa">/t&#810;&#688;a/</span><span class="play" data-kind="cue" aria-label="play ṱa"></span></button>
+    <button class="cue" data-cue="Aspirated_alveolar_plosive_a" data-label="tha" data-ipa="/t&#688;a/" data-place="Alveolar" data-pos="0.5"><span class="glyph-frame"></span><span class="cue-label">tha</span><span class="ipa">/t&#688;a/</span><span class="play" data-kind="cue" aria-label="play tha"></span></button>
+    <button class="cue" data-cue="Voiceless_palatal_plosive_a" data-label="tya" data-ipa="/ca/" data-place="Palatal" data-pos="0.4"><span class="glyph-frame"></span><span class="cue-label">tya</span><span class="ipa">/ca/</span><span class="play" data-kind="cue" aria-label="play tya"></span></button>
+    <button class="cue" data-cue="Aspirated_velar_plosive_a" data-label="kha" data-ipa="/k&#688;a/" data-place="Velar" data-pos="0.3"><span class="glyph-frame"></span><span class="cue-label">kha</span><span class="ipa">/k&#688;a/</span><span class="play" data-kind="cue" aria-label="play kha"></span></button>
+    <div class="zoom"><div class="zoom-inner"></div></div>
+  </div>
+
+  <p class="railnote">line position = place of articulation · <b>apex</b> (lips) &rarr; <b>base</b> (velum)</p>
+
+  <div class="rule"></div>
+
+  <p class="tier-label"><span class="dot"></span> The phoneme at work</p>
+  <p class="tier-sub">Each sound inside a real word — shown in script, with audio.</p>
+
+  <div class="apps">
+    <div class="word" data-word="phapha" data-place="Bilabial"><div class="place-tag">Bilabial</div><div class="romanized">phapha</div><div class="wglyph"><span class="glyph-frame"></span></div><div class="gloss">to be overenthusiastic · <span class="src">isiZulu, Sesotho</span></div><span class="play wplay" data-kind="word" aria-label="play phapha"></span></div>
+    <div class="word" data-word="tata_ve" data-place="Dental"><div class="place-tag">Dental</div><div class="romanized">&#7787;a&#7787;a</div><div class="wglyph"><span class="glyph-frame"></span></div><div class="gloss">to argue, compete · <span class="src">Tshiven&#7693;a</span></div><span class="play wplay" data-kind="word" aria-label="play ṱaṱa"></span></div>
+    <div class="word" data-word="thatha" data-place="Alveolar"><div class="place-tag">Alveolar</div><div class="romanized">thatha</div><div class="wglyph"><span class="glyph-frame"></span></div><div class="gloss">to take · <span class="src">isiZulu</span></div><span class="play wplay" data-kind="word" aria-label="play thatha"></span></div>
+    <div class="word" data-word="itya" data-place="Palatal"><div class="place-tag">Palatal</div><div class="romanized">itya</div><div class="wglyph"><span class="glyph-frame"></span></div><div class="gloss">to eat · <span class="src">isiXhosa</span></div><span class="play wplay" data-kind="word" aria-label="play itya"></span></div>
+    <div class="word" data-word="khokho" data-place="Velar"><div class="place-tag">Velar</div><div class="romanized">khokho</div><div class="wglyph"><span class="glyph-frame"></span></div><div class="gloss">ancestor · <span class="src">isiZulu</span></div><span class="play wplay" data-kind="word" aria-label="play khokho"></span></div>
+  </div>
+
+  <div class="notes">
+    <h4>A note on the words</h4>
+    <p>Most entries are given as the verb <b>stem</b> or root — the smallest piece that shows the sound clearly — rather than the full inflected word.</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  /* ╔═══════════════════════════════════════════════════════════════╗
+     ║  CONFIG — point these at wherever your files live in the repo. ║
+     ║  Edit these lines only. Everything else derives from them.     ║
+     ╚═══════════════════════════════════════════════════════════════╝ */
+  const CFG = {
+    glyphCue:  'assets/glyphs/cues/',     // e.g. 'images/' if you saved them there
+    glyphWord: 'assets/glyphs/words/',
+    audioCue:  'assets/audio/cues/',
+    audioWord: 'assets/audio/words/',
+    glyphExt: '.svg',
+    audioExt: '.mp3'
+  };
+  /* NOTE on filenames: cues are expected WITH the vowel suffix, e.g.
+     "Aspirated_bilabial_plosive_a.svg". If you saved them without "_a"
+     (matching your old PNG names), say so and the suffix gets dropped. */
+
+  const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l12 7-12 7V5z"/></svg>';
+
+  /* placeholder triangle (indicative; your real SVG overrides it on load) */
+  function ph(label,pos){
+    const ax=50,topY=18,botY=86,halfW=34;
+    const yOf=f=>topY+(botY-topY)*f;
+    const line=(y,lw)=>{const t=(y-topY)/(botY-topY),half=halfW*(1-t)*0.7;
+      return `<line x1="${ax-half}" y1="${y}" x2="${ax+half}" y2="${y}" stroke="var(--ibq-mark)" stroke-width="${lw}" stroke-linecap="round"/>`;};
+    const tri=`<polygon points="${ax-halfW},${topY} ${ax+halfW},${topY} ${ax},${botY}" fill="var(--ibq-triangle)" stroke="var(--ibq-line)" stroke-width="1.5"/>`;
+    const marks = pos==='dbl' ? line(yOf(.58),3.2)+line(yOf(.66),3.2) : line(yOf(parseFloat(pos)),3.6);
+    return `<svg class="glyph-ph" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${tri}${marks}<text x="${ax}" y="${botY-6}" text-anchor="middle" font-family="Spline Sans,sans-serif" font-size="11" fill="#fff" font-weight="600" opacity=".85">${label}</text></svg>`;
+  }
+  function glyphImg(src,alt){return `<img class="glyph-img" src="${src}" alt="${alt}" onerror="this.classList.add('missing')">`;}
+
+  /* audio pool keyed by full src; greys the button if the file isn't there */
+  const pool=document.createElement('div'); pool.hidden=true; document.body.appendChild(pool);
+  function play(src,btn){
+    let a=pool.querySelector(`audio[data-s="${src}"]`);
+    if(!a){a=document.createElement('audio');a.dataset.s=src;a.src=src;pool.appendChild(a);
+      a.addEventListener('error',()=>{if(btn){btn.classList.add('muted');btn.title='audio not added yet';}});}
+    a.currentTime=0; a.play().catch(()=>{if(btn){btn.classList.add('muted');btn.title='audio not added yet';}});
+  }
+
+  /* init EACH demo section independently (multi-instance safe) */
+  document.querySelectorAll('.ibq-demo').forEach(root=>{
+    root.querySelectorAll('.hero .cue').forEach(cue=>{
+      const frame=cue.querySelector('.glyph-frame');
+      frame.insertAdjacentHTML('beforeend', ph(cue.dataset.label,cue.dataset.pos));
+      frame.insertAdjacentHTML('beforeend', glyphImg(CFG.glyphCue+cue.dataset.cue+CFG.glyphExt, cue.dataset.label));
+    });
+    root.querySelectorAll('.apps .word').forEach(w=>{
+      const frame=w.querySelector('.glyph-frame');
+      frame.insertAdjacentHTML('beforeend', ph(w.querySelector('.romanized').textContent.trim(),'0.5'));
+      frame.insertAdjacentHTML('beforeend', glyphImg(CFG.glyphWord+w.dataset.word+CFG.glyphExt, w.dataset.word));
+    });
+    root.querySelectorAll('.play').forEach(p=>{
+      p.innerHTML=PLAY;
+      p.addEventListener('click',e=>{
+        e.stopPropagation();
+        const host=p.closest('.cue,.word'); if(!host) return;
+        const isCue=p.dataset.kind==='cue';
+        const name=isCue?host.dataset.cue:host.dataset.word;
+        play((isCue?CFG.audioCue:CFG.audioWord)+name+CFG.audioExt, p);
+      });
+    });
+    const cues=[...root.querySelectorAll('.hero .cue')];
+    root.querySelector('.playall').addEventListener('click',()=>{
+      let i=0;
+      (function next(){
+        if(i>=cues.length){cues.forEach(c=>c.classList.remove('dim','active'));return;}
+        cues.forEach(c=>c.classList.add('dim'));
+        cues[i].classList.remove('dim');cues[i].classList.add('active');
+        play(CFG.audioCue+cues[i].dataset.cue+CFG.audioExt);
+        const cur=cues[i];i++;
+        setTimeout(()=>{cur.classList.remove('active');next();},900);
+      })();
+    });
+    const zoom=root.querySelector('.zoom'), zi=root.querySelector('.zoom-inner');
+    let openKey=null;
+    cues.forEach((cue,idx)=>{
+      cue.addEventListener('click',()=>{
+        const key=cue.dataset.cue;
+        if(openKey===key){zoom.classList.remove('open');openKey=null;cues.forEach(c=>c.classList.remove('active','dim'));return;}
+        openKey=key;
+        const word=root.querySelectorAll('.apps .word')[idx];
+        const wr=word.querySelector('.romanized').textContent;
+        const wg=word.querySelector('.gloss').innerHTML;
+        zi.innerHTML=`<span class="glyph-frame big">${ph(cue.dataset.label,cue.dataset.pos)}${glyphImg(CFG.glyphCue+key+CFG.glyphExt,cue.dataset.label)}</span>
+          <div class="meta"><h3>${cue.dataset.label}</h3>
+          <div class="ipa">${cue.dataset.ipa} · ${cue.dataset.place} plosive</div>
+          <div class="applies">in a word: <b>${wr}</b> — ${wg}</div>
+          <span class="play" aria-label="play ${cue.dataset.label}">${PLAY}</span></div>`;
+        zi.querySelector('.play').addEventListener('click',e=>{e.stopPropagation();play(CFG.audioCue+key+CFG.audioExt,e.currentTarget);});
+        cue.after(zoom); zoom.classList.add('open');
+        cues.forEach(c=>c.classList.add('dim')); cue.classList.remove('dim'); cue.classList.add('active');
+      });
+    });
+  });
+})();
+</script>
+<!-- ════════════════════════════ MODULE END ════════════════════════════ -->
+
+</body>
+</html>
