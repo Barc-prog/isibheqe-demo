@@ -211,7 +211,7 @@
     const marks = pos==='dbl' ? line(yOf(.58),3.2)+line(yOf(.66),3.2) : line(yOf(parseFloat(pos)),3.6);
     return `<svg class="glyph-ph" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${tri}${marks}<text x="${ax}" y="${botY-6}" text-anchor="middle" font-family="Spline Sans,sans-serif" font-size="11" fill="#fff" font-weight="600" opacity=".85">${label}</text></svg>`;
   }
-  function glyphImg(src,alt){return `<img class="glyph-img" src="${src}" alt="${alt}" onerror="this.classList.add('missing')">`;}
+  function glyphImg(src,alt){return `<img class="glyph-img" src="${src}" alt="${alt}" onerror="this.classList.add('missing')" onload="this.previousElementSibling.style.display='none'">`;}
 
   /* audio pool keyed by full src; greys the button if the file isn't there */
   const pool=document.createElement('div'); pool.hidden=true; document.body.appendChild(pool);
